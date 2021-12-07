@@ -1,1 +1,1 @@
-# gu_django_rest
+# Django REST framework
