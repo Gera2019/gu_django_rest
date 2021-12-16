@@ -9,3 +9,6 @@ class TodoUser(AbstractUser):
     firstname = AbstractUser.first_name
     lastname = AbstractUser.last_name
     email = models.EmailField(unique=True)
+
+    def __str__(self):
+        return AbstractUser.username
