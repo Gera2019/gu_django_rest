@@ -1,0 +1,20 @@
+[
+    {
+        "username": "bull",
+        "first_name": "Олег",
+        "last_name": "Орлов",
+        "email": "olg@m.ru"
+    },
+    {
+        "username": "gera",
+        "first_name": "Александра",
+        "last_name": "Герасимова",
+        "email": "gera@m.ru"
+    },
+    {
+        "username": "green",
+        "first_name": "Лана",
+        "last_name": "Рей",
+        "email": "rey@m.ru"
+    }
+]
