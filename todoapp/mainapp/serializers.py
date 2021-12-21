@@ -7,9 +7,13 @@ from .models import Project, TodoNote
 
 
 class ProjectModelSerializer(serializers.ModelSerializer):
+    users = serializers.StringRelatedField(many=True)
+
     class Meta:
         model = Project
-        fields = ['name', 'url', 'users']
+        fields = ['id', 'name', 'url', 'users']
+
+
 
 
 class TodoNoteModelSerializer(serializers.ModelSerializer):

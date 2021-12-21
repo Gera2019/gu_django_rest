@@ -12,7 +12,7 @@ class Project(models.Model):
         max_length=512,
         verbose_name='git url',
     )
-    users = models.ManyToManyField(TodoUser)
+    users = models.ManyToManyField(TodoUser, blank=True)
 
     def __str__(self):
         return self.name
