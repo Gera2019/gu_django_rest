@@ -4,13 +4,11 @@ import { useParams } from 'react-router-dom'
 const NoteItem = ({item}) => {
 
     return (
-        <table>
             <tr>
                 <td>{item.id}</td>
-                <td>{item.user}</td>
+                <td>{item.userid.firstName} {item.userid.lastName}</td>
                 <td>{item.text}</td>
             </tr>
-        </table>
     )
 }
 
