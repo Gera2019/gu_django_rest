@@ -6,6 +6,9 @@ from datetime import timedelta
 class TodoUser(AbstractUser):
     avatar = models.ImageField(upload_to='users_avatars', blank=True)
     age = models.PositiveIntegerField(verbose_name='age', default=18)
-    firstname = AbstractUser.first_name
-    lastname = AbstractUser.last_name
+    # first_name = AbstractUser.first_name
+    # last_name = AbstractUser.last_name
     email = models.EmailField(unique=True)
+
+    def __str__(self):
+        return AbstractUser.first_name
