@@ -10,7 +10,7 @@ const NoteItem = ({item}) => {
                {item.userid.username}
            </td>
            <td>
-               {item.projectid}
+               {item.projectid.name}
            </td>
 
            <td>
@@ -33,7 +33,7 @@ const NoteList = ({items}) => {
                User
            </th>
            <th>
-               Project ID
+               Project Name
            </th>
 
            <th>
