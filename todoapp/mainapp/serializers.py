@@ -9,7 +9,13 @@ class TodoUserModelSerializer(serializers.ModelSerializer):
 
 
 class ProjectModelSerializer(serializers.ModelSerializer):
-    users = serializers.StringRelatedField(many=True)
+    users = TodoUserModelSerializer(many=True)
+
+    class Meta:
+        model = Project
+        fields = ['id', 'name', 'url', 'users']
+
+class ProjectModelSerializerIn(serializers.ModelSerializer):
 
     class Meta:
         model = Project
