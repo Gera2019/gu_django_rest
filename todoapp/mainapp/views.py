@@ -4,16 +4,10 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 from .models import Project, TodoNote, TodoUser
-from .serializers import ProjectModelSerializer, ProjectModelSerializerIn, TodoNoteModelSerializer, TodoUserModelSerializer
+from .serializers import ProjectModelSerializer, ProjectModelSerializerIn, TodoNoteModelSerializer, \
+    TodoUserModelSerializer, TodoNoteModelSerializerIn, TodoUserModelSerializerStatus
 from .filters import ProjectFilter, TodoNoteFilter
 from rest_framework import mixins
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-
-class CsrfExemptSesionAuthentication(SessionAuthentication):
-    def enforce_csrf(self, request):
-        return
 
 
 class TodoUserCustomViewSet(
@@ -24,7 +18,11 @@ class TodoUserCustomViewSet(
       GenericViewSet
    ):
     queryset = TodoUser.objects.all()
-    serializer_class = TodoUserModelSerializer
+
+    def get_serializer_class(self):
+        if self.request.version == '0.1':
+            return TodoUserModelSerializerStatus
+        return TodoUserModelSerializer
 
 class TodoUserModelView(ModelViewSet):
     serializer_class = TodoUserModelSerializer
@@ -57,7 +55,11 @@ class TodoNoteModelViewSet(ModelViewSet):
    queryset = TodoNote.objects.all()
    serializer_class = TodoNoteModelSerializer
    filter_class = TodoNoteFilter
-   # authentication_classes = (CsrfExemptSesionAuthentication, BasicAuthentication)
+
+   def get_serializer_class(self):
+       if self.request.method in ['GET']:
+           return TodoNoteModelSerializer
+       return TodoNoteModelSerializerIn
 
    def destroy(self, request, pk, **kwargs):
       note = get_object_or_404(TodoNote, pk=pk)
