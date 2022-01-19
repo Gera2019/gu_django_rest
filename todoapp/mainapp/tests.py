@@ -2,7 +2,7 @@ from django.test import TestCase
 import json
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, force_authenticate, APIClient, APISimpleTestCase, APITestCase, \
-    CoreAPIClient
+    CoreAPIClient, APILiveServerTestCase
 from mixer.backend.django import mixer
 from .views import TodoUserModelView
 from .models import TodoUser, Project, TodoNote
@@ -91,14 +91,23 @@ from .models import TodoUser, Project, TodoNote
 #         self.assertEqual(response_note['userid']['firstName'], 'Грин')
 #
 from requests.auth import HTTPBasicAuth
-client = CoreAPIClient()
-client.session.auth = HTTPBasicAuth('admin', '123')
-schema = client.get('http://127.0.0.1:8000/viewsets/notes/')
+class LiveTests(APILiveServerTestCase):
+    # def test_query_params(self):
+    #     client = CoreAPIClient()
+    #
+    #     schema = client.get('http://127.0.0.1:8000/viewsets/users/')
+    #     data = client.action(schema, ['users', 'query'], params={'username': 'gera'})
+    #     expected = {
+    #         'method': 'GET',
+    #         'query_params': {'username': 'gera'}
+    #     }
+    #     assert data == expected
 
-params = {'projectid': 5, 'userid': 7, 'text': 'test live test'}
-client.action(schema, ['notes', 'create'], params)
-
-# Ensure that the organisation exists in the listing
-data = client.action(schema, ['notes', 'list'])
-assert(len(data) == 1)
-assert(data == [{'projectid': 1, 'userid': 7, 'text': 'test live test'}])
+    def test_create_user(self):
+        client = CoreAPIClient()
+        schema = client.get('http://127.0.0.1:8000/viewsets/users/')
+        params = {'username': 'MegaCorp', 'email': 'gh@m.ru'}
+        client.action(schema, ['users', 'create'], params)
+        data = client.action(schema, ['users', 'list'])
+        assert (len(data) == 1)
+        assert (data == [{'username': 'MegaCorp', 'email': 'gh@m.ru'}])

@@ -53,13 +53,13 @@ class ProjectModelViewSet(ModelViewSet):
 
 class TodoNoteModelViewSet(ModelViewSet):
    queryset = TodoNote.objects.all()
-   serializer_class = TodoNoteModelSerializer
+   serializer_class = TodoNoteModelSerializerIn
    filter_class = TodoNoteFilter
 
-   def get_serializer_class(self):
-       if self.request.method in ['GET']:
-           return TodoNoteModelSerializer
-       return TodoNoteModelSerializerIn
+   # def get_serializer_class(self):
+   #     if self.request.method in ['GET']:
+   #         return TodoNoteModelSerializer
+   #     return TodoNoteModelSerializerIn
 
    def destroy(self, request, pk, **kwargs):
       note = get_object_or_404(TodoNote, pk=pk)
