@@ -6,6 +6,9 @@ import NoteList from './components/TodoNotes.js'
 import NoteDetails from './components/NoteDetails.js'
 import ProjectList from './components/Projects.js'
 import ProjectDetails from './components/ProjectDetails.js'
+import UserForm from './components/UserForm.js'
+import ProjectForm from './components/ProjectForm.js'
+import NoteForm from './components/NoteForm.js'
 import {HashRouter, BrowserRouter,  Route, Routes, Link, Switch, Navigate} from 'react-router-dom'
 import axios from 'axios'
 import LoginForm from './components/Auth.js'
@@ -65,8 +68,7 @@ class App extends React.Component {
         return headers
     }
 
-
-   load_data() {
+    load_data() {
         const headers = this.get_headers()
 
         axios.get('http://127.0.0.1:8000/viewsets/users', {headers})
@@ -95,16 +97,108 @@ class App extends React.Component {
                    }
                )
            }).catch(error => console.log(error))
+    }
+
+    delete_user(id) {
+        let headers = this.get_headers()
+        axios
+        .delete(`http://127.0.0.1:8000/viewsets/users/${id}`, {headers})
+        .then(response => {
+            const users = response.data['results']
+            this.setState({
+                'users': this.state.users.filter((item) => item.id != id)
+            })
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    }
+
+    delete_project(id) {
+        let headers = this.get_headers()
+        axios
+        .delete(`http://127.0.0.1:8000/viewsets/projects/${id}`, {headers})
+        .then(response => {
+            const projects = response.data['results']
+            this.setState({
+                'projects': this.state.projects.filter((item) => item.id != id)
+            })
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    }
+
+    delete_note(id) {
+        let headers = this.get_headers()
+        axios
+        .delete(`http://127.0.0.1:8000/viewsets/notes/${id}`, {headers})
+        .then(response => {
+            const notes = response.data['results']
+            this.setState({
+                'users': this.state.notes.filter((item) => item.id != id)
+            })
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    }
+
+    create_user(username, firstname, lastname, email, age, password) {
+        const headers = this.get_headers()
+        const data = {
+            username: username,
+            firstName: firstname,
+            lastName: lastname,
+            email: email,
+            age: age,
+            password: password
         }
+
+        axios.post(`http://127.0.0.1:8000/viewsets/users/`, data, {headers})
+            .then(response => {
+              let new_user = response.data['results']
+              this.setState({users: [...this.state.users, new_user]})
+            }).catch(error => console.log(error))
+    }
+
+    create_project(name, url, users) {
+        const headers = this.get_headers()
+        const data = {
+            name: name,
+            url: url,
+            users: users,
+        }
+
+        axios.post(`http://127.0.0.1:8000/viewsets/projects/`, data, {headers})
+            .then(response => {
+              let new_project = response.data['results']
+              const users = this.state.users.filter((item) => item.id === new_project.user)[0]
+              new_project.users = users
+              this.setState({projects: [...this.state.projects, new_project]})
+            }).catch(error => console.log(error))
+    }
+
+    create_note(username, project, text) {
+        const headers = this.get_headers()
+        const data = {
+            userid: username,
+            projectid: project,
+            text: text,
+        }
+
+        axios.post(`http://127.0.0.1:8000/viewsets/notes/`, data, {headers})
+            .then(response => {
+              let new_note = response.data['results']
+              this.setState({notes: [...this.state.notes, new_note]})
+            }).catch(error => console.log(error))
+    }
 
     componentDidMount() {
         this.get_token_from_storage()
     }
 
-
-   render () {
-
-    console.log(this.state.username, this.state.token)
+    render () {
        return (
            <div className="App">
                <BrowserRouter>
@@ -128,13 +222,18 @@ class App extends React.Component {
 
                         </ul>
                     </nav>
+
                     <Routes>
-                        <Route exact path='/' element={<UserList items={this.state.users} />}  />
-                        <Route exact path='/notes' element={<NoteList items={this.state.notes} />} />
-                        <Route exact path='/projects' element={<ProjectList items={this.state.projects} />} />
+                        <Route exact path='/' element={<UserList items={this.state.users} delete_user={(id) => this.delete_user(id)} />} />
+                        <Route exact path='/create' element={<UserForm create_user={(username,firstname,lastname,email,age,password) => this.create_user(username, firstname, lastname, email, age, password)}/>}  />
+                        <Route exact path='/notes' element={<NoteList items={this.state.notes} delete_note={(id) => this.delete_note(id)}/>} />
+                        <Route exact path='/projects' element={<ProjectList users={this.state.users} items={this.state.projects} delete_project={(id) => this.delete_project(id)}/>} />
+                        <Route exact path='/projects/create' element={<ProjectForm users={this.state.users} create_project={(name, url, users) => this.create_project(name, url, users)} />}  />
                         <Route exact path="/notes/:id" element={<NoteDetails items={this.state.notes} />} />
+                        <Route exact path='/notes/create' element={<NoteForm users={this.state.users} projects={this.state.projects}  create_note={(username, project, text) => this.create_note(username, project, text)} />}  />
                         <Route exact path="/projects/:id" element={<ProjectDetails items={this.state.projects} />} />
                         <Route exact path='/login' element={<LoginForm get_token={(username, password) => this.get_token(username, password)} />} />} />
+
                     </Routes>
                </BrowserRouter>
            </div>

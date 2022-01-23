@@ -15,6 +15,7 @@ class TodoUserCustomViewSet(
       mixins.RetrieveModelMixin,
       mixins.UpdateModelMixin,
       mixins.CreateModelMixin,
+      mixins.DestroyModelMixin,
       GenericViewSet
    ):
     queryset = TodoUser.objects.all()
@@ -41,14 +42,14 @@ class ProjectLimitOffsetPagination(LimitOffsetPagination):
 
 class ProjectModelViewSet(ModelViewSet):
    queryset = Project.objects.all()
-   serializer_class = ProjectModelSerializer
+   serializer_class = ProjectModelSerializerIn
    pagination_class = ProjectLimitOffsetPagination
    filter_class = ProjectFilter
 
-   def get_serializer_class(self):
-       if self.request.method in ['GET']:
-           return ProjectModelSerializer
-       return ProjectModelSerializerIn
+   # def get_serializer_class(self):
+   #     if self.request.method in ['GET']:
+   #         return ProjectModelSerializer
+   #     return ProjectModelSerializerIn
 
 
 class TodoNoteModelViewSet(ModelViewSet):
@@ -56,10 +57,10 @@ class TodoNoteModelViewSet(ModelViewSet):
    serializer_class = TodoNoteModelSerializerIn
    filter_class = TodoNoteFilter
 
-   # def get_serializer_class(self):
-   #     if self.request.method in ['GET']:
-   #         return TodoNoteModelSerializer
-   #     return TodoNoteModelSerializerIn
+   def get_serializer_class(self):
+       if self.request.method in ['GET']:
+           return TodoNoteModelSerializer
+       return TodoNoteModelSerializerIn
 
    def destroy(self, request, pk, **kwargs):
       note = get_object_or_404(TodoNote, pk=pk)

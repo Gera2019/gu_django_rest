@@ -21,7 +21,6 @@ class ProjectModelSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'url', 'users']
 
 class ProjectModelSerializerIn(serializers.ModelSerializer):
-
     class Meta:
         model = Project
         fields = ['id', 'name', 'url', 'users']
