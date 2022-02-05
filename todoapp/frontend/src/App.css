@@ -36,6 +36,23 @@
     transform: rotate(360deg);
   }
 }
-table {
-    border: black, 2px, dashed;
+table, th, td {
+  border: 1px solid black;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px 10px 10px 10px;
+}
+
+th {
+    background-color: green;
+}
+ul {
+  list-style-type: none;
+  margin: 10px;
+  padding: 0;
+
+}
+ul li {
+      display: inline;
+      margin: 10px;
 }

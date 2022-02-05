@@ -1,3 +1,5 @@
 from django.contrib import admin
+from mainapp.models import Project, TodoNote
 
-# Register your models here.
+admin.site.register(Project, verbose_name='Проекты')
+admin.site.register(TodoNote, verbose_name='Записи')
