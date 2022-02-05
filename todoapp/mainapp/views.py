@@ -4,7 +4,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 from .models import Project, TodoNote, TodoUser
-from .serializers import ProjectModelSerializer, TodoNoteModelSerializer, TodoUserModelSerializer
+from .serializers import ProjectModelSerializer, ProjectModelSerializerIn, TodoNoteModelSerializer, TodoUserModelSerializer
 from .filters import ProjectFilter, TodoNoteFilter
 from rest_framework import mixins
 from django.utils.decorators import method_decorator
@@ -36,12 +36,6 @@ class TodoUserModelView(ModelViewSet):
             queryset = queryset.filter(username=username)
         return queryset
 
-# class TodoUserDetails(ModelViewSet):
-#     serializer_class = TodoUserModelSerializer
-#
-#     def get_queryset(self):
-#         username = self.kwargs['username']
-#         return TodoUser.objects.filter(username=username)
 
 class ProjectLimitOffsetPagination(LimitOffsetPagination):
    default_limit = 10
@@ -52,6 +46,11 @@ class ProjectModelViewSet(ModelViewSet):
    serializer_class = ProjectModelSerializer
    pagination_class = ProjectLimitOffsetPagination
    filter_class = ProjectFilter
+
+   def get_serializer_class(self):
+       if self.request.method in ['GET']:
+           return ProjectModelSerializer
+       return ProjectModelSerializerIn
 
 
 class TodoNoteModelViewSet(ModelViewSet):
