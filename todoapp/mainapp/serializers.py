@@ -1,9 +1,11 @@
 from rest_framework import serializers, renderers
 
-from authapp.models import TodoUser
-from authapp.serializers import TodoUserModelSerializer
-from .models import Project, TodoNote
+from .models import Project, TodoNote, TodoUser
 
+class TodoUserModelSerializer(serializers.ModelSerializer):
+    class Meta:
+       model = TodoUser
+       fields = ('id', 'username', 'first_name', 'last_name', 'email', 'password')
 
 
 class ProjectModelSerializer(serializers.ModelSerializer):
@@ -14,11 +16,7 @@ class ProjectModelSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'url', 'users']
 
 
-
-
 class TodoNoteModelSerializer(serializers.ModelSerializer):
-    userid = TodoUserModelSerializer()
-    projectid = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = TodoNote

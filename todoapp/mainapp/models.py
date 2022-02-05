@@ -1,6 +1,13 @@
 from django.db import models
-from authapp.models import TodoUser
+from django.contrib.auth.models import AbstractUser
 
+class TodoUser(AbstractUser):
+    avatar = models.ImageField(upload_to='users_avatars', blank=True)
+    age = models.PositiveIntegerField(verbose_name='age', default=18)
+    email = models.EmailField(unique=True)
+
+    def __str__(self):
+        return self.first_name
 
 class Project(models.Model):
     name = models.CharField(

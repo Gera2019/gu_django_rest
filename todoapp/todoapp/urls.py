@@ -16,8 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from authapp.views import TodoUserCustomViewSet
-from mainapp.views import ProjectModelViewSet,TodoNoteModelViewSet
+from rest_framework.authtoken import views
+
+from mainapp.views import ProjectModelViewSet,TodoNoteModelViewSet,TodoUserCustomViewSet
 
 router = DefaultRouter()
 router.register('users', TodoUserCustomViewSet, basename='user')
@@ -29,4 +30,5 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include(router.urls)),
     path('viewsets/', include(router.urls)),
+    path('api-token-auth/', views.obtain_auth_token)
 ]
