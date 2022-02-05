@@ -17,7 +17,8 @@ class ProjectModelSerializer(serializers.ModelSerializer):
 
 
 class TodoNoteModelSerializer(serializers.ModelSerializer):
-
+    userid = TodoUserModelSerializer()
+    projectid = ProjectModelSerializer()
     class Meta:
         model = TodoNote
         fields = '__all__'

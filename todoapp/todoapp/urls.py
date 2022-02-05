@@ -18,12 +18,13 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
 
-from mainapp.views import ProjectModelViewSet,TodoNoteModelViewSet,TodoUserCustomViewSet
+from mainapp.views import ProjectModelViewSet, TodoNoteModelViewSet, TodoUserCustomViewSet, TodoUserModelView
 
 router = DefaultRouter()
-router.register('users', TodoUserCustomViewSet, basename='user')
+router.register('users', TodoUserModelView, basename='user')
 router.register('projects', ProjectModelViewSet, basename='project')
 router.register('notes', TodoNoteModelViewSet, basename='TodoNote')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),

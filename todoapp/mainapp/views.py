@@ -23,13 +23,25 @@ class TodoUserCustomViewSet(
       mixins.CreateModelMixin,
       GenericViewSet
    ):
-   queryset = TodoUser.objects.all()
-   serializer_class = TodoUserModelSerializer
-#    authentication_classes = (CsrfExemptSesionAuthentication, BasicAuthentication)
+    queryset = TodoUser.objects.all()
+    serializer_class = TodoUserModelSerializer
 
-# class TodoUserModelViewSet(ModelViewSet):
-#     queryset = TodoUser.objects.all()
+class TodoUserModelView(ModelViewSet):
+    serializer_class = TodoUserModelSerializer
+
+    def get_queryset(self):
+        queryset = TodoUser.objects.all()
+        username = self.request.query_params.get('username')
+        if username is not None:
+            queryset = queryset.filter(username=username)
+        return queryset
+
+# class TodoUserDetails(ModelViewSet):
 #     serializer_class = TodoUserModelSerializer
+#
+#     def get_queryset(self):
+#         username = self.kwargs['username']
+#         return TodoUser.objects.filter(username=username)
 
 class ProjectLimitOffsetPagination(LimitOffsetPagination):
    default_limit = 10
@@ -37,7 +49,6 @@ class ProjectLimitOffsetPagination(LimitOffsetPagination):
 
 class ProjectModelViewSet(ModelViewSet):
    queryset = Project.objects.all()
-   # authentication_classes = (CsrfExemptSesionAuthentication, BasicAuthentication)
    serializer_class = ProjectModelSerializer
    pagination_class = ProjectLimitOffsetPagination
    filter_class = ProjectFilter
